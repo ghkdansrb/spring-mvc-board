@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ksmart.hmk.BoardMapper">
+	
+	<delete id="boardRemove"
+			parameterType="com.ksmart.hmk.service.Board">
+		DELETE FROM board 
+		WHERE 
+			board_no=#{boardNo} 
+		AND 
+			board_pw=#{boardPw}			
+	</delete>
+	<update id="updateBoard"
+			parameterType="com.ksmart.hmk.service.Board">
+		UPDATE board SET 
+			board_title=#{boardTitle}, 
+			board_content=#{boardContent} 
+		WHERE 
+			board_no=#{boardNo} 
+		AND 
+			board_pw=#{boardPw}
+	</update>
+	
+	<select id="selectBoardByKey" 
+			parameterType="int"
+			resultType="com.ksmart.hmk.service.Board">
+		SELECT 
+			board_no as boardNo,
+			board_title as boardTitle, 
+			board_content as boardContent, 
+			board_user as boardUser, 
+			board_date as boardDate 
+		FROM board 
+		WHERE 
+			board_no=#{boardNo}
+	</select>
+	
+	<select id="selectTotalBoardCount"
+			resultType="int">
+			SELECT 
+				COUNT(*) 
+			FROM board
+	</select>
+	<!-- 마이바티스는 입력값 2개를 받을수 없어서 맵을 이용하거나 모델을 만들어야한다. -->
+	<select id="selectBoardListPerPage"
+			parameterType="Map"
+			resultType="com.ksmart.hmk.service.Board">
+		SELECT 
+			board_no as boardNo, 
+			board_title as boardTitle, 
+			board_user as boardUser, 
+			board_date as boardDate 
+		FROM board 
+			ORDER BY board_date DESC 
+			LIMIT #{beginRow}, #{pagePerRow}
+	</select>
+	
+	<insert id="boardAdd"
+			parameterType="com.ksmart.hmk.service.Board">
+		INSERT INTO board(
+			board_pw, 
+			board_title, 
+			board_content, 
+			board_user, 
+			board_date) 
+		values(
+			 #{boardPw},
+			 #{boardTitle},
+			 #{boardContent},
+			 #{boardUser},
+			 now()
+		)
+
+	</insert>
+</mapper>
